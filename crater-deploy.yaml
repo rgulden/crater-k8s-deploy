@@ -68,7 +68,8 @@ spec:
       - name: pipeline-docker-registry
       volumes:
       - name: crater-nginx-shared
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: crater-pvc
       - name: mariadb
         persistentVolumeClaim:
           claimName: mariadb-pvc
