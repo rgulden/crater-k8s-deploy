@@ -1,0 +1,13 @@
+stages:
+- name: Publish
+  steps:
+  - publishImageConfig:
+      dockerfilePath: ./Dockerfile
+      buildContext: .
+      tag: crater-php:${CICD_EXECUTION_SEQUENCE}
+    env:
+      PLUGIN_BUILD_ARGS: crater-user, 1000
+- name: Deploy
+  steps:
+  - applyYamlConfig:
+      path: ./crater-deploy.yaml
