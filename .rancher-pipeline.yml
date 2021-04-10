@@ -7,6 +7,7 @@ stages:
       tag: crater-php:${CICD_EXECUTION_SEQUENCE}
     env:
       PLUGIN_BUILD_ARGS: "user=crater-user,uid=1000"
+      PLUGIN_MTU: 1450
 - name: Deploy
   steps:
   - applyYamlConfig:
