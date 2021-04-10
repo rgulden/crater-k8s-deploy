@@ -175,7 +175,7 @@ metadata:
   name: crater-ingress
 spec:
   rules:
-    - host: crater.guldentech.com
+    - host: crater.guldenconsulting.com
       http:
         paths:
           - path: /
