@@ -6,7 +6,7 @@ stages:
       buildContext: .
       tag: crater-php:${CICD_EXECUTION_SEQUENCE}
     env:
-      PLUGIN_BUILD_ARGS: crater-user, 1000
+      PLUGIN_BUILD_ARGS: "user=crater-user,uid=1000"
 - name: Deploy
   steps:
   - applyYamlConfig:
