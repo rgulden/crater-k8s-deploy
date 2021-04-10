@@ -1,0 +1,143 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: mariadb-conf
+data:
+  MYSQL_USER: crater
+  MYSQL_DATABASE: crater
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    server {
+        client_max_body_size 64M;
+        listen 80;
+        index index.php index.html;
+        error_log  /var/log/nginx/error.log;
+        access_log /var/log/nginx/access.log;
+        root /var/www/public;
+        location ~ \.php$ {
+            try_files $uri =404;
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass app:9000;
+            fastcgi_index index.php;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param PATH_INFO $fastcgi_path_info;
+        }
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+            gzip_static on;
+        }
+    }
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: uploads-config
+data:
+  uploads.ini: |
+    file_uploads = On
+    upload_max_filesize = 64M
+    post_max_size = 64M
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crater
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crater
+  template:
+    metadata:
+      labels:
+        app: crater
+    spec:
+      volumes:
+      - name: crater-nginx-shared
+        emptyDir: {}
+      - name: mariadb
+        persistentVolumeClaim:
+          claimName: mariadb-pvc
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+      - name: uploads-config
+        configMap:
+          name: uploads-config
+      containers:
+      - name: nginx
+        image: nginx:1.17-alpine
+        ports:
+          - containerPort: 80
+            protocol: TCP
+        volumeMounts:
+          - name: crater-nginx-shared
+            mountPath: /var/www
+          - name: nginx-config
+            mountPath: /etc/nginx/conf.d/nginx.conf
+            subPath: nginx.conf
+      - name: mariadb
+        image: mariadb
+        envFrom:
+        - configMapRef:
+            name: mariadb-conf
+        - secretRef:
+            name: mariadb-pass
+        ports:
+        - containerPort: 33006
+          protocol: TCP
+        volumeMounts:
+          - name: mariadb
+            mountPath: /var/lib/mysql
+      - name: crater
+        image: crater-php
+        volumeMounts:
+          - name: crater-nginx-shared
+            mountPath: var/www
+          - name: uploads-config
+            mountPath: /usr/local/etc/php/conf.d/uploads.ini
+            subPath: uploads.ini
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: crater-service
+spec:
+  type: ClusterIP
+  ports:
+    - name: crater-port
+      port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: crater
+
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: crater-ingress
+spec:
+  rules:
+    - host: crater.guldentech.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: crater-service
+              servicePort: crater-port
