@@ -3,23 +3,22 @@ Files associated with deploying the opensource Crater project to kubernetes
 
 Crater: https://github.com/bytefury/crater
 
-## Building locally
+## Deploying
 
-If rancher is causing a issue for building, build locally and push remote.
-
+Clone the repo and cd into it from terminal.
 ```bash
-# Build
-docker build --build-arg user=crater-user --build-arg uid=1000 --no-cache -t 10.10.10.1:5000/crater-php:v1.0 .
-
-# Then push
-docker push 10.10.10.1:5000/crater-php:v1.0
+# Create your pvcs first
+kubectl apply -f mariadb-pvc.yaml -n your-namespace \
+	&& kubectl apply -f crater-pvc.yaml -n your-namespace
 ```
 
-Update the image in the deployment file and kubectl apply -f manually.
+After you create the pvcs some updates are needed in the deployment file.
 
-```yaml
-image: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}
+* On line 27 change fastcgi_pass crater-service.guldenconsulting.svc.cluster.local:9000; to fastcgi_pass crater-service.your-namespace.svc.cluster.local:9000;
+* In the ingress resource, either delete it if you are not using it, or change the hostname to your domain name.
 
-# to (or vise versa)
-registry:5000/crater-php:v1.0
+Once those changes are done, run the following
+```bash
+# Create your pvcs first
+kubectl apply -f crater-deploy.yaml -n your-namespace
 ```

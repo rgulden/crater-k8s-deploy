@@ -64,8 +64,6 @@ spec:
       labels:
         app: crater
     spec:
-      imagePullSecrets:
-      - name: pipeline-docker-registry
       volumes:
       - name: crater-nginx-shared
         persistentVolumeClaim:
@@ -106,7 +104,7 @@ spec:
           - name: mariadb
             mountPath: /var/lib/mysql
       - name: crater
-        image: registry:5000/crater-php:v1.0
+        image: rgulden7/crater-php:v1.0
         command: ["/bin/bash"]
         args: ["-c", "cp -r /tmp/crater/. /var/www && cp .env.example .env && composer install --no-interaction --prefer-dist --optimize-autoloader && php artisan storage:link || true && php artisan key:generate && chmod -R 775 storage/framework/ storage/logs/ bootstrap/cache/ && php-fpm"]
         imagePullPolicy: Always
