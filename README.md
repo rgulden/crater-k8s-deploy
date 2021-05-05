@@ -20,5 +20,8 @@ After you create the pvcs some updates are needed in the deployment file.
 Once those changes are done, run the following
 ```bash
 # Create your pvcs first
+
+# Create your secrets
+kubectl create secret generic --from-literal=MYSQL_PASSWORD=crater -from-literal=MYSQL_ROOT_PASSWORD=crater -n your-namespace
 kubectl apply -f crater-deploy.yaml -n your-namespace
 ```
