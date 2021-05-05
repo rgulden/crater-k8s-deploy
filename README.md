@@ -3,7 +3,7 @@ Files associated with deploying the opensource Crater project to kubernetes
 
 Crater: https://github.com/bytefury/crater
 
-TODO: Post first running of app, need to remove CP command for all files and for .env.. maybe make it a configMap and mount it.
+TODO: Create config map script as entry point. In script have a if condition to check if .env exists in targeted directory, if it doesnt run copy commands. Following condition run normal commands.
 
 ## Deploying
 
