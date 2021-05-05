@@ -14,7 +14,7 @@ kubectl apply -f mariadb-pvc.yaml -n your-namespace \
 
 After you create the pvcs some updates are needed in the deployment file.
 
-* On line 27 change fastcgi_pass crater-service.guldenconsulting.svc.cluster.local:9000; to fastcgi_pass crater-service.your-namespace.svc.cluster.local:9000;
+* On line 27 change fastcgi_pass crater-service.crater.svc.cluster.local:9000; to fastcgi_pass crater-service.your-namespace.svc.cluster.local:9000;
 * In the ingress resource, either delete it if you are not using it, or change the hostname to your domain name.
 
 Once those changes are done, run the following
@@ -23,5 +23,7 @@ Once those changes are done, run the following
 
 # Create your secrets
 kubectl create secret generic --from-literal=MYSQL_PASSWORD=crater -from-literal=MYSQL_ROOT_PASSWORD=crater -n your-namespace
+
+# Apply config
 kubectl apply -f crater-deploy.yaml -n your-namespace
 ```
