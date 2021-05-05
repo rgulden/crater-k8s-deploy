@@ -3,6 +3,8 @@ Files associated with deploying the opensource Crater project to kubernetes
 
 Crater: https://github.com/bytefury/crater
 
+TODO: Post first running of app, need to remove CP command for all files and for .env.. maybe make it a configMap and mount it.
+
 ## Deploying
 
 Clone the repo and cd into it from terminal.
