@@ -3,8 +3,6 @@ Files associated with deploying the opensource Crater project to kubernetes
 
 Crater: https://github.com/bytefury/crater
 
-TODO: Create config map script as entry point. In script have a if condition to check if .env exists in targeted directory, if it doesnt run copy commands. Following condition run normal commands.
-
 ## Deploying
 
 Clone the repo and cd into it from terminal.
