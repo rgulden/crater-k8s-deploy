@@ -39,7 +39,7 @@ RUN git clone https://github.com/bytefury/crater.git \
     && chmod -R 777 crater/ \
     && ls -al
 
-# Set working directory
-WORKDIR /var/www
 
 USER $user
+WORKDIR /var/www
+ENTRYPOINT ["/entrypoint.sh"]

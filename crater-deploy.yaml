@@ -50,6 +50,30 @@ data:
 
 ---
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: entrypoint
+data:
+  entrypoint.sh: |
+    #!/usr/bin/env bash
+    echo "Running entry script..."
+
+    FILE=/var/www/.env 
+    if [ ! -f "$FILE" ]; then
+        cp -r /tmp/crater/. /var/www
+        cp .env.example .env 
+    fi
+
+    composer install --no-interaction --prefer-dist --optimize-autoloader
+    php artisan storage:link || true 
+    php artisan key:generate 
+    chmod -R 775 storage/framework/ storage/logs/ bootstrap/cache/
+
+    php-fpm
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -77,6 +101,9 @@ spec:
       - name: uploads-config
         configMap:
           name: uploads-config
+      - name: entrypoint
+        configMap:
+          name: entrypoint
       containers:
       - name: nginx
         image: nginx:1.17-alpine
@@ -105,8 +132,6 @@ spec:
             mountPath: /var/lib/mysql
       - name: crater
         image: rgulden7/crater-php:v1.0
-        command: ["/bin/bash"]
-        args: ["-c", "cp -r /tmp/crater/. /var/www && cp .env.example .env && composer install --no-interaction --prefer-dist --optimize-autoloader && php artisan storage:link || true && php artisan key:generate && chmod -R 775 storage/framework/ storage/logs/ bootstrap/cache/ && php-fpm"]
         imagePullPolicy: Always
         ports:
         - containerPort: 9000
@@ -117,6 +142,9 @@ spec:
           - name: uploads-config
             mountPath: /usr/local/etc/php/conf.d/uploads.ini
             subPath: uploads.ini
+          - name: entrypoint
+            mountPath: /entrypoint.sh
+            subPath: entrypoint.sh
 
 ---
 
