@@ -61,6 +61,7 @@ data:
 
     FILE=/var/www/.env 
     if [ ! -f "$FILE" ]; then
+        echo "We need to copy over files.. first time.."
         cp -r /tmp/crater/. /var/www
         cp .env.example .env 
     fi
