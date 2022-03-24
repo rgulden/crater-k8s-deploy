@@ -22,7 +22,7 @@ Once those changes are done, run the following
 # Create your pvcs first
 
 # Create your secrets
-kubectl create secret generic --from-literal=MYSQL_PASSWORD=crater -from-literal=MYSQL_ROOT_PASSWORD=crater -n your-namespace
+kubectl create secret generic mariadb-pass --from-literal=MYSQL_PASSWORD=crater --from-literal=MYSQL_ROOT_PASSWORD=crater -n your-namespace
 
 # Apply config
 kubectl apply -f crater-deploy.yaml -n your-namespace
