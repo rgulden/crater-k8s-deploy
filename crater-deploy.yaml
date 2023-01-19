@@ -198,16 +198,27 @@ spec:
 
 ---
 
+apiVersion: networking.k8s.io/v1
 kind: Ingress
-apiVersion: extensions/v1beta1
 metadata:
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   name: crater-ingress
+  namespace: crater
 spec:
   rules:
-    - host: crater.guldenconsulting.com
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: nginx-service
-              servicePort: nginx-port
+  - host: crater.guldenconsulting.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: nginx-service
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - crater.guldenconsulting.com
+    secretName: crater.guldenconsulting.com
