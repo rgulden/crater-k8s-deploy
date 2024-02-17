@@ -51,4 +51,4 @@ RUN chown -R $user /tmp/crater \
 WORKDIR /var/www
 USER $user
 
-CMD ["/tmp/crater/start.sh"]
+ENTRYPOINT ["/tmp/crater/start.sh"]
