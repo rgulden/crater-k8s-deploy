@@ -5,7 +5,8 @@ whoami
 FILE=/var/www/.env 
 if [ ! -f "$FILE" ]; then
     echo "We need to copy over files.. first time.."
-    cp -r /tmp/crater/. /var/www/
+    cp -r /crater/. /var/www/
+    cp /tmp/.env /var/www/.env
     ls -al
 fi
 

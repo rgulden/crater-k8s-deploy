@@ -7,7 +7,7 @@ metadata:
   name: crater-ingress
 spec:
   rules:
-  - host: crater.guldenconsulting.com
+  - host: crater.guldentech.com
     http:
       paths:
       - backend:
@@ -19,5 +19,5 @@ spec:
         pathType: ImplementationSpecific
   tls:
   - hosts:
-    - crater.guldenconsulting.com
-    secretName: crater.guldenconsulting.com
+    - crater.guldentech.com
+    secretName: crater.guldentech.com

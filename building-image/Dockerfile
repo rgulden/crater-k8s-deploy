@@ -35,20 +35,20 @@ RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
 
-WORKDIR /tmp/crater/
+WORKDIR /crater
 
-COPY start.sh /tmp/crater/
+COPY start.sh /crater/
 
-ADD https://github.com/crater-invoice/crater/archive/refs/tags/${APP_VERSION}.tar.gz /tmp/crater/
+ADD https://github.com/crater-invoice/crater/archive/refs/tags/${APP_VERSION}.tar.gz /crater/
 
 RUN tar -xzf ${APP_VERSION}.tar.gz --strip-components=1 \
     && rm ${APP_VERSION}.tar.gz \
     && ls -al
 
-RUN chown -R $user /tmp/crater \
+RUN chown -R $user /crater \
     && ls -al
 
 WORKDIR /var/www
 USER $user
 
-ENTRYPOINT [ "/tmp/crater/start.sh" ]
+ENTRYPOINT [ "/crater/start.sh" ]
