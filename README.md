@@ -1,13 +1,13 @@
 # crater-k8s-deploy
 Files associated with deploying the opensource Crater project to kubernetes
 
-Crater: https://github.com/crater-invoice/crater/tree/4.2.0
+Crater: https://github.com/crater-invoice/crater/tree/4.1.0
 
 ## Deploying
 
 Clone the repo and cd into it from terminal.
 ```bash
-git clone https://github.com/rgulden/crater-k8s-deploy/tree/4.2.0
+git clone https://github.com/rgulden/crater-k8s-deploy/tree/4.1.0
 cd crater-k8s-deploy/
 ```
 

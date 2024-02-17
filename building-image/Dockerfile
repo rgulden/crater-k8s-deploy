@@ -3,7 +3,7 @@ FROM php:7.4-fpm
 # Arguments defined in docker-compose.yml
 ARG user=crater-user
 ARG uid=1000
-ARG APP_VERSION=4.2.0
+ARG APP_VERSION=4.1.0
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
