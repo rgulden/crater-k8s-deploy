@@ -12,6 +12,7 @@ cd crater-k8s-deploy/
 ```
 
 > **Note:** If you plan to use the ingress resource, you must update the `yaml` file before running the below command.
+
 > **Note:** You should update the .env data in the configmaps `yaml` wherever `guldenconsulting.com` is mentioned.
 
 Once those changes are done, run the following
