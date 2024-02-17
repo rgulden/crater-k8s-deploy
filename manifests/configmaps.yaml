@@ -1,0 +1,100 @@
+## Note, it would be best to create secret for this
+## but im being a little lazy
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: mariadb-conf
+data:
+  MYSQL_USER: crater
+  MYSQL_PASSWORD: crater
+  MYSQL_DATABASE: crater
+  MYSQL_ROOT_PASSWORD: crater
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    server {
+        client_max_body_size 64M;
+        listen 80;
+        index index.php index.html;
+        error_log  /var/log/nginx/error.log;
+        access_log /var/log/nginx/access.log;
+        root /var/www/public;
+        location ~ \.php$ {
+            try_files $uri =404;
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass localhost:9000;
+            fastcgi_index index.php;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param PATH_INFO $fastcgi_path_info;
+        }
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+            gzip_static on;
+        }
+    }
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: uploads-config
+data:
+  uploads.ini: |
+    file_uploads = On
+    upload_max_filesize = 64M
+    post_max_size = 64M
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: crater-env-file
+data:
+  .env: |
+    APP_ENV=production
+    APP_KEY=base64:kgk/4DW1vEVy7aEvet5FPp5un6PIGe/so8H0mvoUtW0=
+    APP_DEBUG=true
+    APP_LOG_LEVEL=debug
+    APP_URL=https://crater.guldenconsulting.com
+
+    DB_CONNECTION=mysql
+    DB_HOST=localhost
+    DB_PORT=3306
+    DB_DATABASE=crater
+    DB_USERNAME=crater
+    DB_PASSWORD=crater
+
+    BROADCAST_DRIVER=log
+    CACHE_DRIVER=file
+    QUEUE_DRIVER=sync
+    SESSION_DRIVER=cookie
+    SESSION_LIFETIME=1440
+
+    REDIS_HOST=127.0.0.1
+    REDIS_PASSWORD=null
+    REDIS_PORT=6379
+
+    MAIL_DRIVER=smtp
+    MAIL_HOST=
+    MAIL_PORT=
+    MAIL_USERNAME=
+    MAIL_PASSWORD=
+    MAIL_ENCRYPTION=
+
+    PUSHER_APP_ID=
+    PUSHER_KEY=
+    PUSHER_SECRET=
+
+    SANCTUM_STATEFUL_DOMAINS=crater.guldenconsulting.com
+    SESSION_DOMAIN=crater.guldenconsulting.com
+
+    TRUSTED_PROXIES="*"

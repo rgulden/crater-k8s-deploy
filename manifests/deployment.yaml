@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crater
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crater
+  template:
+    metadata:
+      labels:
+        app: crater
+    spec:
+      volumes:
+      - name: crater-nginx-shared
+        persistentVolumeClaim:
+          claimName: crater-pvc
+      - name: mariadb
+        persistentVolumeClaim:
+          claimName: mariadb-pvc
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+      - name: uploads-config
+        configMap:
+          name: uploads-config
+      - name: crater-env-file
+        configMap:
+          name: crater-env-file
+      containers:     
+      - name: nginx
+        image: nginx:1.17-alpine
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+            protocol: TCP
+        volumeMounts:
+          - name: crater-nginx-shared
+            mountPath: /var/www
+          - name: nginx-config
+            mountPath: /etc/nginx/conf.d
+      - name: mariadb
+        image: mariadb
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: mariadb-conf
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        volumeMounts:
+          - name: mariadb
+            mountPath: /var/lib/mysql
+      - name: crater
+        image: rgulden7/crater:4.2.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+        volumeMounts:
+          - name: crater-nginx-shared
+            mountPath: /var/www
+          - name: uploads-config
+            mountPath: /usr/local/etc/php/conf.d
+          - name: crater-env-file
+            mountPath: /tmp/crater

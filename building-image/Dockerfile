@@ -1,8 +1,9 @@
 FROM php:7.4-fpm
 
 # Arguments defined in docker-compose.yml
-ARG user
-ARG uid
+ARG user=crater-user
+ARG uid=1000
+ARG APP_VERSION=4.2.0
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -33,13 +34,21 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
-# Clone the app
-WORKDIR /tmp
-RUN git clone https://github.com/bytefury/crater.git \
-    && chmod -R 777 crater/ \
+
+WORKDIR /tmp/crater/
+
+COPY start.sh /tmp/crater/
+
+ADD https://github.com/crater-invoice/crater/archive/refs/tags/${APP_VERSION}.tar.gz /tmp/crater/
+
+RUN tar -xzf ${APP_VERSION}.tar.gz --strip-components=1 \
+    && rm ${APP_VERSION}.tar.gz \
     && ls -al
 
+RUN chown -R $user /tmp/crater \
+    && ls -al
 
-USER $user
 WORKDIR /var/www
-ENTRYPOINT ["/entrypoint.sh"]
+USER $user
+
+CMD ["/tmp/crater/start.sh"]
