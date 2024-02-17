@@ -1,29 +1,20 @@
 # crater-k8s-deploy
 Files associated with deploying the opensource Crater project to kubernetes
 
-Crater: https://github.com/bytefury/crater
+Crater: https://github.com/crater-invoice/crater/tree/4.2.0
 
 ## Deploying
 
 Clone the repo and cd into it from terminal.
 ```bash
-# Create your pvcs first
-kubectl apply -f mariadb-pvc.yaml -n your-namespace \
-	&& kubectl apply -f crater-pvc.yaml -n your-namespace
+git clone https://github.com/rgulden/crater-k8s-deploy/tree/4.2.0
+cd crater-k8s-deploy/
 ```
 
-After you create the pvcs some updates are needed in the deployment file.
-
-* On line 27 change fastcgi_pass crater-service.crater.svc.cluster.local:9000; to fastcgi_pass crater-service.your-namespace.svc.cluster.local:9000;
-* In the ingress resource, either delete it if you are not using it, or change the hostname to your domain name.
+> **Note:** If you plan to use the ingress resource, you must update the `yaml` file before running the below command.
+> **Note:** You should update the .env data in the configmaps `yaml` wherever `guldenconsulting.com` is mentioned.
 
 Once those changes are done, run the following
 ```bash
-# Create your pvcs first
-
-# Create your secrets
-kubectl create secret generic mariadb-pass --from-literal=MYSQL_PASSWORD=crater --from-literal=MYSQL_ROOT_PASSWORD=crater -n your-namespace
-
-# Apply config
-kubectl apply -f crater-deploy.yaml -n your-namespace
+kubectl apply -f manifests/ -n your-namespace
 ```
