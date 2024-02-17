@@ -3,7 +3,7 @@ FROM php:7.4-fpm
 # Arguments defined in docker-compose.yml
 ARG user=crater-user
 ARG uid=1000
-ARG APP_VERSION=4.0.4
+ARG APP_VERSION=4.1.0
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -36,6 +36,7 @@ RUN mkdir -p /home/$user/.composer && \
 
 
 WORKDIR /crater
+RUN mkdir -p /env-files
 
 COPY start.sh /crater/
 
@@ -46,6 +47,7 @@ RUN tar -xzf ${APP_VERSION}.tar.gz --strip-components=1 \
     && ls -al
 
 RUN chown -R $user /crater \
+    && chown -R $user /env-files \
     && ls -al
 
 WORKDIR /var/www
