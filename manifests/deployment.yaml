@@ -64,4 +64,4 @@ spec:
           - name: uploads-config
             mountPath: /usr/local/etc/php/conf.d
           - name: crater-env-file
-            mountPath: /tmp/crater
+            mountPath: /tmp
