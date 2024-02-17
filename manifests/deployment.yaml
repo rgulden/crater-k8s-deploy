@@ -53,7 +53,7 @@ spec:
           - name: mariadb
             mountPath: /var/lib/mysql
       - name: crater
-        image: rgulden7/crater:4.0.4
+        image: rgulden7/crater:4.2.0
         imagePullPolicy: Always
         ports:
         - containerPort: 9000

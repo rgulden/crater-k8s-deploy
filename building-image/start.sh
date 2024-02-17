@@ -10,7 +10,7 @@ if [ ! -f "$FILE" ]; then
     ls -al
 fi
 
-composer install --no-interaction --prefer-dist --optimize-autoloader
+composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
 php artisan storage:link || true 
 php artisan key:generate 
 
