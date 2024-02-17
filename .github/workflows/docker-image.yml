@@ -13,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v1
     - name: Build the Docker image
       run: |
         docker build -t rgulden7/crater:${{ github.ref_name }} building-image/.
