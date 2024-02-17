@@ -14,4 +14,6 @@ composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-p
 php artisan storage:link || true 
 php artisan key:generate 
 
+chmod -R 775 storage/framework/ storage/logs/ bootstrap/cache/
+
 php-fpm
