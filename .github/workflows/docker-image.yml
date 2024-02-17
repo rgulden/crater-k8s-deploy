@@ -1,0 +1,22 @@
+name: Build Docker Image on Tag
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: |
+        docker build -t rgulden7/crater:${{ github.ref_name }} building-image/.
+        docker login -u rgulden7 -p ${{ secrets.DOCKER_PASSWORD }}
+        docker push rgulden7/crater:${{ github.ref_name }}
+      env:
+        DOCKER_CLI_ASK_PASS: "0"
