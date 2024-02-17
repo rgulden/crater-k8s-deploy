@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 echo "Running entry script..."
 whoami 
 FILE=/var/www/.env 

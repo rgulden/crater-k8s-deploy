@@ -37,8 +37,7 @@ RUN mkdir -p /home/$user/.composer && \
 
 WORKDIR /tmp/crater/
 
-COPY start.sh /usr/local/bin/start_app
-RUN chmod +x /usr/local/bin/start_app
+COPY start.sh /tmp/crater/
 
 ADD https://github.com/crater-invoice/crater/archive/refs/tags/${APP_VERSION}.tar.gz /tmp/crater/
 
@@ -52,4 +51,4 @@ RUN chown -R $user /tmp/crater \
 WORKDIR /var/www
 USER $user
 
-ENTRYPOINT ["start_app"]
+ENTRYPOINT [ "/tmp/crater/start.sh" ]
