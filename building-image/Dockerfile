@@ -3,7 +3,7 @@ FROM php:7.4-fpm
 # Arguments defined in docker-compose.yml
 ARG user=crater-user
 ARG uid=1000
-ARG APP_VERSION=4.0.4
+ARG APP_VERSION=4.2.0
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -13,9 +13,10 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    unzip \ 
-    libzip-dev \ 
-    libmagickwand-dev
+    unzip \
+    libzip-dev \
+    libmagickwand-dev \
+    mariadb-client
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
